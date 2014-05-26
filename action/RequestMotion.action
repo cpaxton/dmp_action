@@ -1,0 +1,7 @@
+PoseStamped start
+PoseStamped end
+---
+int32 status
+---
+int32 status
+float64 time
