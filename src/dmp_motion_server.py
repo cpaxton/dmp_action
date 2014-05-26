@@ -24,40 +24,48 @@ def makeSetActiveRequest(dmp_list):
         print "Service call failed: %s"%e
 
 
-def PoseToVector(pose)
-  vec = []
-  vec[0] = pose.position.x
-  vec[1] = pose.position.y
-  vec[2] = pose.position.z
-  vec[3] = pose.orientation.x
-  vec[4] = pose.orientation.y
-  vec[5] = pose.orientation.z
-  vec[6] = pose.orientation.w
+# convert start/end poses to vectors
+def PoseToVector(pose) :
+    vec = []
+    vec[0] = pose.position.x
+    vec[1] = pose.position.y
+    vec[2] = pose.position.z
+    vec[3] = pose.orientation.x
+    vec[4] = pose.orientation.y
+    vec[5] = pose.orientation.z
+    vec[6] = pose.orientation.w
 
-  return vec
+    return vec
 
 '''
 Class defining DMP action server settings
 '''
 class RequestActionServer(object):
-  # create messages that are used to publish feedback/result
-  _feedback = actionlib_tutorials.msg.RequestMotionFeedback()
-  _result   = actionlib_tutorials.msg.RequestMotionResult()
+    # create messages that are used to publish feedback/result
+    _feedback = dmp_action.msg.RequestMotionFeedback()
+    _result   = dmp_action.msg.RequestMotionResult()
 
     def __init__(self, name):
         self._action_name = name
-        self._as = actionlib.SimpleActionServer(self._action_name, actionlib_tutorials.msg.FibonacciAction, execute_cb=self.execute_cb, auto_start = False)
+        self._as = actionlib.SimpleActionServer(self._action_name, dmp_action.msg.RequestMotionAction, execute_cb=self.execute_cb, auto_start = False)
         self._as.start()
         self._publisher = rospy.Publisher('/output_trajectory/', cartesian_trajectory_msgs.msg.CartesianTrajectory)
         self._file_loaded = False
 
-    def load_file_cb(self) :
-        import yaml
-        f = open('tree.yaml')
+    def load_file_cb(self, req) :
+
+        f = open(req.filename)
         # use safe_load instead load
-        data = yaml.safe_load(f)
+        data = yaml.load(f)
+        if verbosity > 1:
+            print "Loaded new DMP object:"
+            print data
         f.close()
-        print data
+
+        return LoadFileResponse(1)
+
+    def start_load_service(self) :
+        return rospy.Service(self._action_name + '/load_file', LoadFile, self.load_file_cb)
     
     def execute_cb(self, goal):
 
@@ -107,11 +115,12 @@ class RequestActionServer(object):
 
                 pt.time_from_start = plan.plan.times[i]
                 pt.poses = [pose]
+                traj.points += [pt]
             
 
             # publisher:
             # sends out cartesian trajectory message to the right topic
-
+            self._publisher.publish(traj)
       
             rospy.loginfo('%s: Succeeded' % self._action_name)
             self._as.set_succeeded(self._result)
@@ -119,9 +128,10 @@ class RequestActionServer(object):
             rospy.logerror('%s: Failed! No DMP loaded.' % self._action_name)
       
 if __name__ == '__main__':
-    rospy.init_node('dmp_action_server_node')
-    s = 
+    rospy.init_node('dmp_action_server')
 
-    RequestActionServer(rospy.get_name())
+    req = RequestActionServer(rospy.get_name())
+    s = req.start_load_service()
+
     rospy.spin()
 
