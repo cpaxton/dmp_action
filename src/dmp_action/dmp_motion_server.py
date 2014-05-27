@@ -117,11 +117,11 @@ class RequestActionServer(object):
         return rospy.Service(self._action_name + '/load_file', LoadFile, self.load_file_cb)
    
 
-   '''
+    '''
     execute_cb()
     Main execute callback for replaying trajectories.
     Takes a goal with a start and end geometry_msgs/Pose object.
-   '''
+    '''
     def execute_cb(self, goal):
 
         if self._file_loaded :
