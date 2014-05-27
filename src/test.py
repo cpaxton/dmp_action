@@ -19,4 +19,30 @@ rospy.wait_for_service('dmp_action_server/load_file')
 lf = rospy.ServiceProxy('dmp_action_server/load_file', LoadFile)
 lf('data.yaml')
 
+client = actionlib.SimpleActionClient('dmp_action_server',
+        dmp_action.msg.RequestMotionAction)
 
+client.wait_for_server()
+
+goal = dmp_action.msg.RequestMotionGoal()
+goal.start.position.x = 0
+goal.start.position.y = 0
+goal.start.position.z = 0
+goal.start.orientation.x = 0
+goal.start.orientation.y = 0
+goal.start.orientation.z = 0
+goal.start.orientation.w = 0
+
+goal.end.position.x = 1
+goal.end.position.y = 1
+goal.end.position.z = 1
+goal.end.orientation.x = 1
+goal.end.orientation.y = 1
+goal.end.orientation.z = 1
+goal.end.orientation.w = 1
+
+client.send_goal(goal)
+
+client.wait_for_result()
+
+print client.get_result()

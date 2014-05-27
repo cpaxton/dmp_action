@@ -14,6 +14,9 @@ from cartesian_trajectory_msgs.msg import *
 
 from dmp_action.msg import *
 
+verbosity = 2
+dims = 7
+
 #Set a DMP as active for planning
 #From active
 def makeSetActiveRequest(dmp_list):
@@ -23,10 +26,28 @@ def makeSetActiveRequest(dmp_list):
     except rospy.ServiceException, e:
         print "Service call failed: %s"%e
 
+#Generate a plan from a DMP
+def makePlanRequest(x_0, x_dot_0, t_0, goal, goal_thresh, 
+                    seg_length, tau, dt, integrate_iter):
+    if verbosity > 0:
+        print "Starting DMP planning..."
+    rospy.wait_for_service('get_dmp_plan')
+    try:
+        gdp = rospy.ServiceProxy('get_dmp_plan', GetDMPPlan)
+        resp = gdp(x_0, x_dot_0, t_0, goal, goal_thresh, 
+                   seg_length, tau, dt, integrate_iter)
+    except rospy.ServiceException, e:
+        print "Service call failed: %s"%e
+
+    if verbosity > 0:
+        print "DMP planning done"   
+            
+    return resp
+
 
 # convert start/end poses to vectors
 def PoseToVector(pose) :
-    vec = []
+    vec = [0]*dims
     vec[0] = pose.position.x
     vec[1] = pose.position.y
     vec[2] = pose.position.z
@@ -56,11 +77,13 @@ class RequestActionServer(object):
 
         f = open(req.filename)
         # use safe_load instead load
-        data = yaml.load(f)
+        self._dmp = yaml.load(f)
         if verbosity > 1:
             print "Loaded new DMP object:"
-            print data
+            print self._dmp
         f.close()
+
+        self._file_loaded = True
 
         return LoadFileResponse(1)
 
@@ -76,7 +99,7 @@ class RequestActionServer(object):
             success = True
     
             #Set it as the active DMP
-            makeSetActiveRequest(resp.dmp_list)
+            makeSetActiveRequest(self._dmp.dmp_list)
 
             #Now, generate a plan
             x_0 = PoseToVector(goal.start)
@@ -85,8 +108,8 @@ class RequestActionServer(object):
             goal = PoseToVector(goal.end)
             goal_thresh = [0.01]*dims
             seg_length = -1          #Plan until convergence to goal
-            tau = resp.tau # same time as the demo
-            dt = 1
+            tau = self._dmp.tau # same time as the demo
+            dt = 0.1
             integrate_iter = 5       #dt is rather large, so this is > 1  
 
             print dt
@@ -100,9 +123,11 @@ class RequestActionServer(object):
     
 
             for i in range(len(plan.plan.points)) :
-                pred_pt = plan.plan.points[i]
+                pred_pt = plan.plan.points[i].positions
 
-                print pred_pt # predicted point
+                if verbosity > 1:
+                    print pred_pt # predicted point
+
                 pose = geometry_msgs.msg.Pose()
                 pt = cartesian_trajectory_msgs.msg.CartesianTrajectoryPoint()
                 pose.position.x = pred_pt[0]
@@ -113,7 +138,7 @@ class RequestActionServer(object):
                 pose.orientation.x = pred_pt[5]
                 pose.orientation.x = pred_pt[6]
 
-                pt.time_from_start = plan.plan.times[i]
+                pt.time_from_start = rospy.Duration(plan.plan.times[i])
                 pt.poses = [pose]
                 traj.points += [pt]
             
@@ -123,15 +148,24 @@ class RequestActionServer(object):
             self._publisher.publish(traj)
       
             rospy.loginfo('%s: Succeeded' % self._action_name)
-            self._as.set_succeeded(self._result)
+            result = RequestMotionResult()
+            result.status = 1
+            self._as.set_succeeded(result)
+
         else :
-            rospy.logerror('%s: Failed! No DMP loaded.' % self._action_name)
+            rospy.logerr('%s: Failed! No DMP loaded.' % self._action_name)
+            result = RequestMotionResult()
+            result.status = 0
+            self._as.set_succeeded(result)
       
 if __name__ == '__main__':
-    rospy.init_node('dmp_action_server')
+    try:
+        rospy.init_node('dmp_action_server')
 
-    req = RequestActionServer(rospy.get_name())
-    s = req.start_load_service()
+        req = RequestActionServer(rospy.get_name())
+        s = req.start_load_service()
 
-    rospy.spin()
+        rospy.spin()
 
+    except rospy.ROSInterruptException:
+        print "program interrupted before completion"

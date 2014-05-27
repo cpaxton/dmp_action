@@ -1,5 +1,5 @@
-geometry_msgs/PoseStamped start
-geometry_msgs/PoseStamped end
+geometry_msgs/Pose start
+geometry_msgs/Pose end
 ---
 int32 status
 ---
