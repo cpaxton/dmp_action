@@ -14,11 +14,24 @@ from cartesian_trajectory_msgs.msg import *
 
 from dmp_action.msg import *
 
+'''
+verbosity
+Controls the level of debug output.
+'''
 verbosity = 2
+
+'''
+dims
+Number of dimensions to expect.
+Used throughout this file.
+'''
 dims = 7
 
-#Set a DMP as active for planning
-#From active
+'''
+makeSetActiveRequest()
+Set a DMP as active for planning.
+Based off of the DMP ROS package example.
+'''
 def makeSetActiveRequest(dmp_list):
     try:
         sad = rospy.ServiceProxy('set_active_dmp', SetActiveDMP)
@@ -26,7 +39,11 @@ def makeSetActiveRequest(dmp_list):
     except rospy.ServiceException, e:
         print "Service call failed: %s"%e
 
-#Generate a plan from a DMP
+'''
+makePlanRequest()
+Generate a plan from a DMP.
+Based off of the DMP ROS package example.
+'''
 def makePlanRequest(x_0, x_dot_0, t_0, goal, goal_thresh, 
                     seg_length, tau, dt, integrate_iter):
     if verbosity > 0:
@@ -44,8 +61,11 @@ def makePlanRequest(x_0, x_dot_0, t_0, goal, goal_thresh,
             
     return resp
 
-
-# convert start/end poses to vectors
+'''
+PoseToVector()
+A simple helper function.
+Convert start/end poses to vectors
+'''
 def PoseToVector(pose) :
     vec = [0]*dims
     vec[0] = pose.position.x
@@ -59,7 +79,9 @@ def PoseToVector(pose) :
     return vec
 
 '''
-Class defining DMP action server settings
+Class defining DMP action server.
+You can call the "load_file" service to pass a file containing a particular DMP to this server.
+After a file has been loaded, the action server may be called any number of times.
 '''
 class RequestActionServer(object):
     # create messages that are used to publish feedback/result
@@ -87,9 +109,19 @@ class RequestActionServer(object):
 
         return LoadFileResponse(1)
 
+    '''
+    start_load_service()
+    Starts a service to load a YAML file containing DMP.
+    '''
     def start_load_service(self) :
         return rospy.Service(self._action_name + '/load_file', LoadFile, self.load_file_cb)
-    
+   
+
+   '''
+    execute_cb()
+    Main execute callback for replaying trajectories.
+    Takes a goal with a start and end geometry_msgs/Pose object.
+   '''
     def execute_cb(self, goal):
 
         if self._file_loaded :
