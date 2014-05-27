@@ -17,7 +17,7 @@ from dmp_action.msg import *
 rospy.init_node('test_dmp_server_node')
 rospy.wait_for_service('dmp_action_server/load_file')
 lf = rospy.ServiceProxy('dmp_action_server/load_file', LoadFile)
-lf('data.yaml')
+lf('sample_data/data.yaml')
 
 client = actionlib.SimpleActionClient('dmp_action_server',
         dmp_action.msg.RequestMotionAction)
