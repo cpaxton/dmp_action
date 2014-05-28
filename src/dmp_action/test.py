@@ -25,21 +25,21 @@ client = actionlib.SimpleActionClient('dmp_action_server',
 client.wait_for_server()
 
 goal = dmp_action.msg.RequestMotionGoal()
-goal.start.position.x = 0
-goal.start.position.y = 0
-goal.start.position.z = 0
-goal.start.orientation.x = 0
-goal.start.orientation.y = 0
-goal.start.orientation.z = 0
-goal.start.orientation.w = 0
+goal.start.position.x = 0.4
+goal.start.position.y =  0.112
+goal.start.position.z = 0.043
+goal.start.orientation.x = 0.753
+goal.start.orientation.y = 0.658
+goal.start.orientation.z = -0.018
+goal.start.orientation.w = -0.021
 
-goal.end.position.x = 1
-goal.end.position.y = 1
-goal.end.position.z = 1
-goal.end.orientation.x = 1
-goal.end.orientation.y = 1
-goal.end.orientation.z = 1
-goal.end.orientation.w = 1
+goal.end.position.x = 0.4
+goal.end.position.y =  0.162
+goal.end.position.z = 0.043
+goal.end.orientation.x = 0.753
+goal.end.orientation.y = 0.658
+goal.end.orientation.z = -0.018
+goal.end.orientation.w = -0.021
 
 client.send_goal(goal)
 

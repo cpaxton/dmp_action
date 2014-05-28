@@ -141,7 +141,7 @@ class RequestActionServer(object):
             goal_thresh = [0.01]*dims
             seg_length = -1          #Plan until convergence to goal
             tau = self._dmp.tau # same time as the demo
-            dt = 0.1
+            dt = 1
             integrate_iter = 5       #dt is rather large, so this is > 1  
 
             print dt
