@@ -1,21 +1,12 @@
 !!python/object/new:dmp.srv._LearnDMPFromDemo.LearnDMPFromDemoResponse {state: [[
       !!python/object/new:dmp.msg._DMPData.DMPData {state: [100.0, 20.0, !!python/tuple [
-            0.7707485649522106, -1.8133129706445583, 2.9507544879128993, -4.543929310738881,
-            4.118373921334133, -3.1846032422065997, 3.0484257647244437, -4.588902768106936,
-            6.191104806874659, -5.507428750050435, 3.1767865188299136]]}, !!python/object/new:dmp.msg._DMPData.DMPData {
-        state: [100.0, 20.0, !!python/tuple [-0.10485254306512193, 1.6182159931862048,
-            -1.3564810705052845, 0.9054178643431285, -1.481432195774884, 1.9470665354168692,
-            -1.0851459279723699, -0.014508038020296876, -0.03983004807179791, 1.8661550759503258,
-            -3.1172358573674392]]}, !!python/object/new:dmp.msg._DMPData.DMPData {
-        state: [100.0, 20.0, !!python/tuple [-0.06353523818943763, 0.9199242768976195,
-            -1.310915781312593, 1.8748514290632041, -2.9056894900961794, 3.4028027594321135,
-            -1.8998683771039628, -0.10270068904401075, -0.4113804298435304, 1.6144895970936317,
-            -3.7495504655141696]]}, !!python/object/new:dmp.msg._DMPData.DMPData {
-        state: [100.0, 20.0, !!python/tuple [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-            0.0, 0.0, 0.0]]}, !!python/object/new:dmp.msg._DMPData.DMPData {state: [
-          100.0, 20.0, !!python/tuple [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-            0.0, 0.0]]}, !!python/object/new:dmp.msg._DMPData.DMPData {state: [100.0,
-          20.0, !!python/tuple [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-            0.0]]}, !!python/object/new:dmp.msg._DMPData.DMPData {state: [100.0, 20.0,
-          !!python/tuple [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]}],
-    3.4000000000000017]}
+            1.2176321058122677, -2.5123095369825976, 3.8445215696330024, -5.242925877076887]]},
+      !!python/object/new:dmp.msg._DMPData.DMPData {state: [100.0, 20.0, !!python/tuple [
+            -0.25954562493553657, 1.818148286521236, -1.6658672342461058, 1.1053501576781481]]},
+      !!python/object/new:dmp.msg._DMPData.DMPData {state: [100.0, 20.0, !!python/tuple [
+            -0.3058727723133712, 1.1785869962402087, -1.7955908495604507, 2.133514148405775]]},
+      !!python/object/new:dmp.msg._DMPData.DMPData {state: [100.0, 20.0, !!python/tuple [
+            0.0, 0.0, 0.0, 0.0]]}, !!python/object/new:dmp.msg._DMPData.DMPData {
+        state: [100.0, 20.0, !!python/tuple [0.0, 0.0, 0.0, 0.0]]}, !!python/object/new:dmp.msg._DMPData.DMPData {
+        state: [100.0, 20.0, !!python/tuple [0.0, 0.0, 0.0, 0.0]]}, !!python/object/new:dmp.msg._DMPData.DMPData {
+        state: [100.0, 20.0, !!python/tuple [0.0, 0.0, 0.0, 0.0]]}], 3.4000000000000017]}
