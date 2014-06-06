@@ -144,12 +144,13 @@ class RequestActionServer(object):
             dt = 1
             integrate_iter = 5       #dt is rather large, so this is > 1  
 
+            print "tau = %f/%f"%(tau, 4*tau)
             print dt
             print x_0
             print goal
 
             plan = makePlanRequest(x_0, x_dot_0, t_0, goal, goal_thresh, 
-                           seg_length, tau, dt, integrate_iter)
+                           seg_length, 4*tau, dt, integrate_iter)
 
             traj = cartesian_trajectory_msgs.msg.CartesianTrajectory()
     
@@ -166,14 +167,16 @@ class RequestActionServer(object):
                 pose.position.y = pred_pt[1]
                 pose.position.z = pred_pt[2]
                 pose.orientation.x = pred_pt[3]
-                pose.orientation.x = pred_pt[4]
-                pose.orientation.x = pred_pt[5]
-                pose.orientation.x = pred_pt[6]
+                pose.orientation.y = pred_pt[4]
+                pose.orientation.z = pred_pt[5]
+                pose.orientation.w = pred_pt[6]
 
                 pt.time_from_start = rospy.Duration(plan.plan.times[i])
                 pt.poses = [pose]
                 traj.points += [pt]
             
+
+            print traj
 
             # publisher:
             # sends out cartesian trajectory message to the right topic
