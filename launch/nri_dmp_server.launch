@@ -1,0 +1,9 @@
+<launch>
+
+  <include file="$(find dmp)/launch/dmp.launch" />
+
+  <node name="dmp_action_server" pkg="dmp_action" type="dmp_motion_server.py" output="screen">
+    <remap from="/output_trajectory" to="/dmp"/>
+  </node>
+
+</launch>
