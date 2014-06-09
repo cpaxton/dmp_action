@@ -28,6 +28,12 @@ Used throughout this file.
 dims = 7
 
 '''
+root
+where to look for .YAML files
+'''
+root = ''
+
+'''
 makeSetActiveRequest()
 Set a DMP as active for planning.
 Based off of the DMP ROS package example.
@@ -97,7 +103,7 @@ class RequestActionServer(object):
 
     def load_file_cb(self, req) :
 
-        f = open(req.filename)
+        f = open(root + req.filename)
         # use safe_load instead load
         self._dmp = yaml.load(f)
         if verbosity > 1:
@@ -196,6 +202,8 @@ class RequestActionServer(object):
 if __name__ == '__main__':
     try:
         rospy.init_node('dmp_action_server')
+        root = rospy.get_param('~root','')
+        print root
 
         req = RequestActionServer(rospy.get_name())
         s = req.start_load_service()
