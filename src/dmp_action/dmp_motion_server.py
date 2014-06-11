@@ -2,6 +2,7 @@
 
 import roslib; roslib.load_manifest('dmp_action')
 import rospy
+import os
 
 import actionlib
 import yaml
@@ -103,7 +104,7 @@ class RequestActionServer(object):
 
     def load_file_cb(self, req) :
 
-        f = open(root + req.filename)
+        f = open(os.path.join(root + req.filename))
         # use safe_load instead load
         self._dmp = yaml.load(f)
         if verbosity > 1:
